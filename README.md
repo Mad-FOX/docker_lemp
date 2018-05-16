@@ -1,2 +1,9 @@
-# docker_deian9_python3_nginx_php7_mariadb
-My custom docker image with Debian 9, Python 3, Nginx, Php 7 and MariaDB
+# Docker_LEMP
+My custom docker image stable docker images from bitnami.
+It includes:
+Php-fpm 7.2
+Nginx Latest
+MySQL 5.7
+
+
+Access adminer.php and connect to mysql using mysql:3306 and root:root
