@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+  phpfpm:
+    image: 'bitnami/php-fpm:7.2.5'
+    networks:
+      - app-tier
+    volumes:
+      - './www:/app'
+    links:
+      - mysql
+    restart: always
+    ports: []
+  nginx:
+    image: 'bitnami/nginx:latest'
+    depends_on:
+      - phpfpm
+    networks:
+      - app-tier
+    ports:
+      - '8080:8080'
+      - '8443:8443'
+    volumes:
+      - './nginx/conf/vhost.conf:/bitnami/nginx/conf/vhosts/vhost.conf:ro'
+      - './nginx/certs:/bitnami/nginx/conf/bitnami/certs'
+      - './www:/app'
+    environment:
+      - NGINX_HTTP_PORT_NUMBER=8080
+      - NGINX_HTTPS_PORT_NUMBER=8443
+    restart: always
+  mysql:
+    image: 'bitnami/mysql:5.7'
+    ports:
+      - '33306:3306'
+    volumes:
+      - './mysql:/bitnami'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PORT_NUMBER=3306
+    networks:
+      - app-tier
+    restart: always
+networks:
+  app-tier:
+    driver: bridge
